@@ -1,0 +1,86 @@
+{% extends "base.html" %} 
+
+{% block content %}
+<div class="container my-4" dir="rtl">
+    <div>
+        <h2>آیتم‌های من (My Items)</h2>
+        <a href="{% url 'create_item' %}">+ ثبت آیتم جدید</a>
+    </div>
+
+    <!-- بخش آمار -->
+    <div>
+        <div>
+            <div>
+                <h6>تعداد کل آیتم‌های من</h6>
+                <h3>{{ stats.total_count }}</h3>
+            </div>
+        </div>
+        <div>
+            <div>
+                <h6>تعداد آیتم‌های OPEN</h6>
+                <h3>{{ stats.open_count }}</h3>
+            </div>
+        </div>
+        <div>
+            <div>
+                <h6>تعداد آیتم‌های CLOSED</h6>
+                <h3>{{ stats.closed_count }}</h3>
+            </div>
+        </div>
+    </div>
+
+    <!-- لیست آیتم‌ها  -->
+    {% if items %}
+        <div>
+            <table>
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">عنوان</th>
+                        <th scope="col">وضعیت</th>
+                        <th scope="col">عملیات</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in items %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>
+                            <a href="{% url 'item_detail' pk=item.id %}">
+                                {{ item.title }}
+                            </a>
+                        </td>
+                        <td>
+                            {% if item.status == 'OPEN' %}
+                                <span>OPEN</span>
+                            {% elif item.status == 'CLOSED' %}
+                                <span>CLOSED</span>
+                            {% else %}
+                                <span>{{ item.status }}</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <a href="{% url 'update_item' pk=item.id %}">
+                                ویرایش (Edit)
+                            </a>
+                            <a href="{% url 'delete_item' pk=item.id %}">
+                                حذف (Delete)
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <!--  نمایش در صورت نبود هیچ آیتمی -->
+        <div>
+            <h4>شما هنوز هیچ آیتمی ثبت نکرده‌اید!</h4>
+            <p>برای شروع، اولین آیتم خود را بسازید.</p>
+            <a href="{% url 'create_item' %}">
+                ثبت اولین آیتم
+            </a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

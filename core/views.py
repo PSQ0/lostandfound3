@@ -6,6 +6,8 @@ from django.shortcuts import (
 )
 from core.models import Item
 from core.forms import ItemForm
+from django.db.models import Count, Q
+from django.contrib.auth.decorators import login_required
 
 
 def create_item(request):
@@ -118,3 +120,19 @@ def delete_item(request, pk):
         "items/confirm_delete.html",
         {"item": item}
     )
+
+@login_required
+def my_items(request):
+    items = Item.objects.filter(created_by=request.user).order_by("-id")
+
+    stats = items.aggregate(
+        total_count=Count("id"),
+        open_count=Count("id", filter=Q(status="open")),
+        closed_count=Count("id", filter=Q(status="closed")),
+    )
+
+    context = {
+        "items": items,
+        "stats": stats,
+    }
+    return render(request, "items/my_items.html", context)
