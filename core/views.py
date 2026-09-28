@@ -25,7 +25,7 @@ def create_item(request):
             item.save()
             messages.success(
                 request,
-                "آیتم به موفقیت ایجاد شد."
+                f"آیتم <{item.title}> با موفقیت ایجاد شد."
             )
             return redirect(
                 "item_detail",
