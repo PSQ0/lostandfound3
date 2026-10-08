@@ -1,4 +1,4 @@
-from django.forms import ModelForm, ValidationError, DateInput
+from django.forms import ModelForm, ValidationError, DateInput, BooleanField
 
 from core.models import Item
 from django.utils import timezone
@@ -65,4 +65,14 @@ class ItemForm(ModelForm):
             )
         return event_date
 
-    
+    def clean_image(self):
+        image = self.cleaned_data.get("image")
+
+        if image:
+            max_mb = 2
+            if image.size > max_mb * 1024 * 1024:
+                actual_mb = image.size / (1024 * 1024)
+                raise ValidationError(
+                    f"حجم تصویر {actual_mb:.2f} مگابایت است. حداکثر حجم مجاز 2 مگابایت است."
+                )
+        return image

@@ -1,7 +1,14 @@
-<form method="post">
+<form method="post" enctype="multipart/form-data">
     {% csrf_token %}
 
-    {{form}}
+    {{form.as_p}}
+
+    {% if item.image %}
+        <div>
+            <label>تصویر فعلی:</label><br>
+            <img src="{{item.image.url}}" alt="{{item.title}}">
+        </div>
+    {% endif %}
 
     <button type="submit"> update </button>
 </form>

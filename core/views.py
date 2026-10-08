@@ -62,10 +62,14 @@ def item_detail(requests, pk):
         created_by=requests.user
     )
 
+    image_size_mb = None
+    if item.image:
+        image_size_mb = round(item.image.size / (1024 * 1024), 2)
+
     return render(
         requests,
         "items/item_detail.html",
-        {"item": item}
+        {"item": item, "image_size_mb": image_size_mb}
     )
 
 
@@ -76,12 +80,18 @@ def update_item(request, pk):
         created_by=request.user
     )
     if request.method == "POST":
+        old_image = item.image
+
         form = ItemForm(
             request.POST,
+            request.FILES,
             instance=item
         )
         if form.is_valid():
-            form.save()
+            updated_item = form.save()
+
+            if old_image and not updated_item.image:
+                old_image.delete(save=False)
             messages.success(
                 request,
                 f"آیتم {item.title} با موفقیت ویرایش شد."
@@ -96,7 +106,7 @@ def update_item(request, pk):
     return render(
         request,
         "items/update.html",
-        {"form": form}
+        {"form": form, "item": item}
     )
 
 

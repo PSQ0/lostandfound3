@@ -21,6 +21,15 @@
 
 {% if item.image %}
     <img src="{{item.image.url}}" alt="{{item.title}}"/>
+
+    <ul>
+        <li>نام فایل: {{ item.image.name }}</li>
+
+        <li>حجم فایل: {{ image_size_mb }} مگابایت</li>
+
+        <li>✔ تصویر برای این آیتم موجود است.</li>
+    </ul>
+
 {% else %}
     <p>تصویری برای این آیتم وجود ندارد.</p>
 {% endif %}

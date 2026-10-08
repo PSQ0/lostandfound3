@@ -8,6 +8,8 @@ class Category(models.Model):
     def __str__(self):
         return self.title
 
+def item_image_path(instance, filename):
+    return f"items/user_{instance.created_by.id}/{filename}"
 
 class Item(models.Model):
 
@@ -38,7 +40,7 @@ class Item(models.Model):
         related_name='items_user'
     )
     image = models.ImageField(
-        upload_to="items/",
+        upload_to=item_image_path,
         blank=True,
         null=True
     )
